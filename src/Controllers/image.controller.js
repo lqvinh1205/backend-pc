@@ -22,7 +22,16 @@ const findImageById = catchAsync(async (req, res) => {
 });
 
 const createImage = catchAsync(async (req, res) => {
-  const image = await imageService.createImage(req, res);
+  const image = await imageService.createImage(req.file);
+  return res.status(201).json({
+    status: 201,
+    message: "success",
+    data: image,
+  });
+});
+
+const createMultilImages = catchAsync(async (req, res) => {
+  const image = await imageService.createMultilImages(req.files);
   return res.status(201).json({
     status: 201,
     message: "success",
@@ -45,4 +54,5 @@ module.exports = {
   findImageById,
   createImage,
   deleteImage,
+  createMultilImages,
 };
