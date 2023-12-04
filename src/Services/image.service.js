@@ -7,22 +7,19 @@ const findImageById = async (id) => {
   return await ImageModel.findById(id);
 };
 
-const findAllImageById = async (id) => {
-  return await ImageModel.find({ _id: id });
+const findAllImageById = async (arrayOfIds) => {
+  return await ImageModel.find({ _id: { $in: arrayOfIds } });
 };
 
 const createImage = async (files) => {
   const filePaths = await handleUpload(files, "single");
-  console.log(filePaths);
-  return false;
-  return await ImageModel.create(filePaths);
+  return await ImageModel.create({ path: filePaths });
 };
 
 const createMultilImages = async (files) => {
   const filePaths = await handleUpload(files, "multil");
-  console.log(filePaths);
-  return false;
-  return await ImageModel.insertMany(filePaths);
+  const entries = filePaths.map((item) => ({ path: item }));
+  return await ImageModel.insertMany(entries);
 };
 
 const deleteImage = async (id) => {
@@ -41,7 +38,7 @@ const handleUpload = async (files, type = "single") => {
           file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname);
         const filePath = path.join(dynamicPath, filename);
         await fs.writeFile(filePath, file.buffer);
-        uploadedFiles.push(path.join("src", "Storage", "uploads", filename));
+        uploadedFiles.push(path.join("Storage", "uploads", filename));
       }
       return uploadedFiles;
     case "single":

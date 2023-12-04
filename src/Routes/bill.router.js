@@ -1,17 +1,17 @@
 import { Router } from "express";
 const route = Router();
 import {
-  getListUser,
-  createUser,
-  findUserById,
-  updateUser,
-  deleteUser,
-} from "../Controllers/user.controller";
+  getListBill,
+  createBill,
+  findBillById,
+  updateBill,
+  deleteBill,
+} from "../Controllers/bill.controller";
 
-route.get("/", getListUser); // list
-route.post("/", createUser); // create
-route.get("/:id", findUserById); // get detail
-route.patch("/:id", updateUser); // update
-route.delete("/:id", deleteUser); // delete
+route.get("/", getListBill); // list
+route.post("/", createBill); // create
+route.get("/:id", findBillById); // get detail
+route.patch("/:id", updateBill); // update
+route.delete("/:id", deleteBill); // delete
 
 export default route;

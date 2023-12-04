@@ -2,8 +2,8 @@ const catchAsync = require("../Utils/catchAsync").default;
 const imageService = require("../Services/image.service").default;
 
 const findAllImageById = catchAsync(async (req, res) => {
-  const id = req.params.id;
-  const images = await imageService.findAllImageById(id);
+  const arrayOfIds = req.arrayOfIds;
+  const images = await imageService.findAllImageById(arrayOfIds);
   return res.status(200).json({
     status: 200,
     message: "success",
