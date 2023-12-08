@@ -1,5 +1,6 @@
 import createHttpError from "http-errors";
 import BrandModel from "../Models/Brand.model";
+import ImageService from "./image.service";
 
 const findBrandById = async (id) => {
   return await BrandModel.findById(id);
@@ -18,6 +19,8 @@ const createBrand = async (data) => {
   if (brand) {
     throw createHttpError(404, "Brand already taken");
   }
+  console.log(data);
+  data.filePath = await ImageService.createImage(data.images);
   return await BrandModel.create(data);
 };
 

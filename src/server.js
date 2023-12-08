@@ -15,6 +15,7 @@ import ImagesRouter from "./Routes/image.router";
 //Middleware
 import { checkAuthentication } from "./Middlewares/token";
 import logEvents from "./Helpers/logEvent";
+import createHttpError from "http-errors";
 
 const app = express();
 const server = createServer(app);

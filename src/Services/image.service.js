@@ -1,4 +1,3 @@
-import createHttpError from "http-errors";
 import ImageModel from "../Models/Image.model";
 const fs = require("fs/promises");
 const path = require("path");
@@ -12,6 +11,7 @@ const findAllImageById = async (arrayOfIds) => {
 };
 
 const createImage = async (files) => {
+  console.log(files, 111);
   const filePaths = await handleUpload(files, "single");
   return await ImageModel.create({ path: filePaths });
 };
