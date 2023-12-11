@@ -22,8 +22,7 @@ const findBrandById = catchAsync(async (req, res) => {
 });
 
 const createBrand = catchAsync(async (req, res) => {
-  const data = req.body;
-  const brand = await brandService.createBrand(data);
+  const brand = await brandService.createBrand(req);
   return res.status(201).json({
     status: 201,
     message: "success",
@@ -33,8 +32,7 @@ const createBrand = catchAsync(async (req, res) => {
 
 const updateBrand = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const data = req.body;
-  const brand = await brandService.updateBrand(id, data);
+  const brand = await brandService.updateBrand(id, req);
   return res.status(201).json({
     status: 201,
     message: "success",

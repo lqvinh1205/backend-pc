@@ -1,3 +1,4 @@
+import { x } from "joi";
 import ImageModel from "../Models/Image.model";
 const fs = require("fs/promises");
 const path = require("path");
@@ -11,9 +12,8 @@ const findAllImageById = async (arrayOfIds) => {
 };
 
 const createImage = async (files) => {
-  console.log(files, 111);
-  const filePaths = await handleUpload(files, "single");
-  return await ImageModel.create({ path: filePaths });
+  const filename = await handleUpload(files, "single");
+  return await ImageModel.create({ path: filename });
 };
 
 const createMultilImages = async (files) => {
@@ -23,6 +23,12 @@ const createMultilImages = async (files) => {
 };
 
 const deleteImage = async (id) => {
+  const image = await findImageById(id);
+  if (image) {
+    fs.unlink(
+      path.join(process.cwd(), "src", "Storage", "uploads", image.path)
+    );
+  }
   return await ImageModel.findByIdAndDelete(id);
 };
 
@@ -47,7 +53,7 @@ const handleUpload = async (files, type = "single") => {
         files.fieldname + "-" + uniqueSuffix + path.extname(files.originalname);
       const filePath = path.join(dynamicPath, filename);
       await fs.writeFile(filePath, files.buffer);
-      return filePath;
+      return filename;
     default:
       break;
   }

@@ -7,11 +7,12 @@ import {
   updateBrand,
   deleteBrand,
 } from "../Controllers/brand.controller";
+import upload from "../Utils/uploadMiddlware";
 
 route.get("/", getListBrand); // list
-route.post("/", createBrand); // create
+route.post("/", upload.single("images"), createBrand); // create
 route.get("/:id", findBrandById); // get detail
-route.patch("/:id", updateBrand); // update
+route.patch("/:id", upload.single("images"), updateBrand); // update
 route.delete("/:id", deleteBrand); // delete
 
 export default route;

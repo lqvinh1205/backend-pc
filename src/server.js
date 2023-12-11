@@ -16,6 +16,7 @@ import ImagesRouter from "./Routes/image.router";
 import { checkAuthentication } from "./Middlewares/token";
 import logEvents from "./Helpers/logEvent";
 import createHttpError from "http-errors";
+import path from "path";
 
 const app = express();
 const server = createServer(app);
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // su dung cac route
+app.use("/images", express.static(path.resolve(__dirname, "Storage/uploads")));
 app.use("/v1", AuthRouter);
 app.use("/v1/users", UserRouter);
 app.use("/v1/brands", BrandRouter);
@@ -43,7 +45,6 @@ app.use("/v1/images", ImagesRouter);
 app.use((req, res, next) => {
   next(createHttpError(404, "Not found"));
 });
-
 app.use((err, req, res, next) => {
   logEvents(`${req.url} --- ${req.method} --- ${err.message}`);
   res.status(err.status || 500);
