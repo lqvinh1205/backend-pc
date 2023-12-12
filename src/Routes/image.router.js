@@ -7,7 +7,7 @@ import {
   deleteImage,
   findAllImageById,
 } from "../Controllers/image.controller";
-import upload from "../Utils/uploadMiddlware";
+import upload from "../Middlewares/uploadMiddlware";
 
 route.get("/:id", findAllImageById); // get one
 route.get("/:id", findImageById); // get all

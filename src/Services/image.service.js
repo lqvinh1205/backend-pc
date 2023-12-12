@@ -1,4 +1,3 @@
-import { x } from "joi";
 import ImageModel from "../Models/Image.model";
 const fs = require("fs/promises");
 const path = require("path");
@@ -23,13 +22,13 @@ const createMultilImages = async (files) => {
 };
 
 const deleteImage = async (id) => {
-  const image = await findImageById(id);
-  if (image) {
+  const entries = await ImageModel.findByIdAndDelete(id);
+  if (entries) {
     fs.unlink(
-      path.join(process.cwd(), "src", "Storage", "uploads", image.path)
+      path.join(process.cwd(), "src", "Storage", "uploads", entries.path)
     );
   }
-  return await ImageModel.findByIdAndDelete(id);
+  return entries;
 };
 
 const handleUpload = async (files, type = "single") => {

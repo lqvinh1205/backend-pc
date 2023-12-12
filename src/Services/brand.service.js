@@ -35,6 +35,8 @@ const updateBrand = async (id, req) => {
 };
 
 const deleteBrand = async (id) => {
+  const brand = await findBrandById(id);
+  await ImageService.deleteImage(brand.logo.id);
   return await BrandModel.findByIdAndDelete(id);
 };
 
