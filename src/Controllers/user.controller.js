@@ -32,7 +32,6 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  console.log(12);
   const id = req.params.id;
   const data = req.body;
   const user = await userService.updateUser(id, data);

@@ -10,3 +10,4 @@ export const STATUS_BILL = {
 };
 export const ZERO = 0;
 export const WARRANTY_UNIT = ["Tháng", "Năm"];
+export const PASSWOD_DEFAULT = "123456";

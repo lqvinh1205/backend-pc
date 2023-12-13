@@ -1,6 +1,7 @@
 import createHttpError from "http-errors";
 import UserModel from "../Models/User.model";
 import { hash } from "bcrypt";
+import { PASSWOD_DEFAULT } from "../Constants";
 
 const findUserById = async (id) => {
   return await UserModel.findById(id);
@@ -21,7 +22,7 @@ const createUser = async (data) => {
   if (user) {
     throw createHttpError(404, "User already taken");
   }
-  data.password = await hash(data.password, 8);
+  data.password = await hash(PASSWOD_DEFAULT, 8);
   return await UserModel.create(data);
 };
 
