@@ -6,7 +6,7 @@ import {
   findProductById,
   updateProduct,
   deleteProduct,
-} from "../Controllers/user.controller";
+} from "../Controllers/product.controller";
 
 route.get("/", getListProduct); // list
 route.post("/", createProduct); // create

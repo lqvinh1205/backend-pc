@@ -9,6 +9,7 @@ import cors from "cors";
 import UserRouter from "./Routes/users.router";
 import AuthRouter from "./Routes/auth.router";
 import BrandRouter from "./Routes/brand.router";
+import ProductRouter from "./Routes/product.router";
 import ConfiguarationRouter from "./Routes/configuaration.router";
 import ImagesRouter from "./Routes/image.router";
 
@@ -39,6 +40,7 @@ app.use("/images", express.static(path.resolve(__dirname, "Storage/uploads")));
 app.use("/v1", AuthRouter);
 app.use("/v1/users", UserRouter);
 app.use("/v1/brands", BrandRouter);
+app.use("/v1/products", ProductRouter);
 app.use("/v1/configuaration", ConfiguarationRouter);
 app.use("/v1/images", ImagesRouter);
 
