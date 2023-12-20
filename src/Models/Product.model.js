@@ -65,9 +65,21 @@ const ProductSchema = new Schema(
       trim: true,
       required: true,
     },
+    config: {
+      type: mongoose.Schema.Types.Mixed,
+      required: true,
+    },
     brand_id: {
       type: Schema.Types.ObjectId,
       ref: "Brand",
+    },
+    status: {
+      type: Boolean,
+      default: false,
+    },
+    is_deleted: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

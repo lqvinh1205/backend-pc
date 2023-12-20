@@ -41,7 +41,7 @@ app.use("/v1", AuthRouter);
 app.use("/v1/users", UserRouter);
 app.use("/v1/brands", BrandRouter);
 app.use("/v1/products", ProductRouter);
-app.use("/v1/configuaration", ConfiguarationRouter);
+app.use("/v1/configuage", ConfiguarationRouter);
 app.use("/v1/images", ImagesRouter);
 
 app.use((req, res, next) => {

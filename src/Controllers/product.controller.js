@@ -2,12 +2,14 @@ const catchAsync = require("../Utils/catchAsync").default;
 const productService = require("../Services/product.service").default;
 
 const getListProduct = catchAsync(async (req, res) => {
-  const conditions = req.body;
+  const conditions = req.query;
   const products = await productService.getListProductByConditions(conditions);
+  const total = await productService.getListProductByConditions();
   return res.status(200).json({
     status: 200,
     message: "success",
     data: products,
+    total: total.length,
   });
 });
 
@@ -22,9 +24,7 @@ const findProductById = catchAsync(async (req, res) => {
 });
 
 const createProduct = catchAsync(async (req, res) => {
-  const data = req.body;
-  console.log(data);
-  const product = await productService.createProduct(data);
+  const product = await productService.createProduct(req);
   return res.status(201).json({
     status: 201,
     message: "success",
@@ -34,8 +34,8 @@ const createProduct = catchAsync(async (req, res) => {
 
 const updateProduct = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const data = req.body;
-  const product = await productService.updateProduct(id, data);
+  console.log(req.body);
+  const product = await productService.updateProduct(id, req);
   return res.status(201).json({
     status: 201,
     message: "success",

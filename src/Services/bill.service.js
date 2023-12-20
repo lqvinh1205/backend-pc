@@ -26,7 +26,13 @@ const updateBill = async (id, data) => {
 };
 
 const deleteBill = async (id) => {
-  return await BillModel.findByIdAndDelete(id);
+  return await BillModel.findByIdAndUpdate(
+    id,
+    {
+      is_deleted: true,
+    },
+    { new: true }
+  );
 };
 
 export default {

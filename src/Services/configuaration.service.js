@@ -1,41 +1,38 @@
-import createHttpError from "http-errors";
 import ConfiguarationModel from "../Models/Configuaration.model";
-
-const findConfiguarationById = async (id) => {
-  return await ConfiguarationModel.findById(id);
-};
+import ConfiguarationDetail from "../Models/ConfiguarationDetail.model";
 
 const getListConfiguarationByConditions = async (conditions) => {
-  return await ConfiguarationModel.find(conditions);
+  return await ConfiguarationModel.aggregate([
+    {
+      $lookup: {
+        from: "configuarationdetails",
+        localField: "_id",
+        foreignField: "configuaration_id",
+        as: "list",
+      },
+    },
+  ]);
 };
 
-const findConfiguarationByConditions = async (conditions, options = {}) => {
-  return await ConfiguarationModel.findOne(conditions, options);
-};
-
-const createConfiguaration = async (data) => {
-  const configuaration = await findConfiguarationByConditions({
-    name: data.name,
+const createConfiguaration = async ({ configuage }) => {
+  await ConfiguarationModel.deleteMany({});
+  await ConfiguarationDetail.deleteMany({});
+  const req = configuage.map(async (config) => {
+    const entrie = await ConfiguarationModel.create({ name: config.name });
+    const dataIteams = config.list.map((item) => ({
+      name: item.name,
+      configuaration_id: entrie._id,
+    }));
+    const responseItems = await ConfiguarationDetail.insertMany(dataIteams);
+    return {
+      configure: entrie,
+      configureItems: responseItems,
+    };
   });
-  if (configuaration) {
-    throw createHttpError(404, "Configuaration already taken");
-  }
-  return await ConfiguarationModel.create(data);
-};
-
-const updateConfiguaration = async (id, data) => {
-  return await ConfiguarationModel.findByIdAndUpdate(id, data, { new: true });
-};
-
-const deleteConfiguaration = async (id) => {
-  return await ConfiguarationModel.findByIdAndDelete(id);
+  return await Promise.all(req);
 };
 
 export default {
   createConfiguaration,
   getListConfiguarationByConditions,
-  findConfiguarationByConditions,
-  findConfiguarationById,
-  updateConfiguaration,
-  deleteConfiguaration,
 };

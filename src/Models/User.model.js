@@ -48,6 +48,10 @@ const UserSchema = new Schema(
       required: true,
       default: ROLES["customer"],
     },
+    is_deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

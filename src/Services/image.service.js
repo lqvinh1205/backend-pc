@@ -31,6 +31,20 @@ const deleteImage = async (id) => {
   return entries;
 };
 
+const deleteMultilImage = async (ids) => {
+  const entries = await ImageModel.find({ _id: { $in: ids } });
+  await ImageModel.deleteMany({ _id: { $in: ids } });
+  if (entries) {
+    const paths = entries.map((item) => item.path);
+    paths.forEach((nameFile) => {
+      fs.unlink(
+        path.join(process.cwd(), "src", "Storage", "uploads", nameFile)
+      );
+    });
+  }
+  return entries;
+};
+
 const handleUpload = async (files, type = "single") => {
   const dynamicPath = path.join(process.cwd(), "src", "Storage", "uploads");
   await fs.mkdir(dynamicPath, { recursive: true });
@@ -43,7 +57,7 @@ const handleUpload = async (files, type = "single") => {
           file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname);
         const filePath = path.join(dynamicPath, filename);
         await fs.writeFile(filePath, file.buffer);
-        uploadedFiles.push(path.join("Storage", "uploads", filename));
+        uploadedFiles.push(filename);
       }
       return uploadedFiles;
     case "single":
@@ -63,4 +77,5 @@ export default {
   findAllImageById,
   findImageById,
   deleteImage,
+  deleteMultilImage,
 };

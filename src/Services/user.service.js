@@ -31,7 +31,13 @@ const updateUser = async (id, data) => {
 };
 
 const deleteUser = async (id) => {
-  return await UserModel.findByIdAndDelete(id);
+  return await UserModel.findByIdAndUpdate(
+    id,
+    {
+      is_deleted: true,
+    },
+    { new: true }
+  );
 };
 
 export default {

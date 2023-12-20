@@ -9,23 +9,9 @@ const ConfiguarationDetailSchema = new Schema(
       trim: true,
       required: true,
     },
-    value: {
-      type: String,
-      trim: true,
-      required: true,
-    },
-    value: {
-      type: String,
-      trim: true,
-      required: true,
-    },
     configuaration_id: {
       type: Schema.Types.ObjectId,
       ref: "Configuaration",
-    },
-    product_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
     },
   },
   { timestamps: true }

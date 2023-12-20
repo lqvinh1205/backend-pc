@@ -24,9 +24,17 @@ const BillSchema = new Schema(
       trim: true,
       enum: Object.values(STATUS_BILL),
     },
+    note: {
+      type: String,
+      trim: true,
+    },
     user_id: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    is_deleted: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
