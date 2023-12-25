@@ -4,6 +4,26 @@ const Schema = mongoose.Schema;
 
 const BillSchema = new Schema(
   {
+    email: {
+      type: String,
+      trim: true,
+      required: false,
+      lowercase: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    phone_number: {
+      type: String,
+      trim: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+      required: true,
+    },
     total: {
       type: Number,
       trim: true,

@@ -1,6 +1,9 @@
 import createHttpError from "http-errors";
 import BillModel from "../Models/Bill.model";
-
+import BillDetailModel from "../Models/BillDetail.model";
+import { PASSWOD_DEFAULT, STATUS_BILL } from "../Constants";
+import userService from "./user.service";
+import productService from "./product.service";
 const findBillById = async (id) => {
   return await BillModel.findById(id);
 };
@@ -14,11 +17,42 @@ const findBillByConditions = async (conditions, options = {}) => {
 };
 
 const createBill = async (data) => {
-  const brand = await findBillByConditions({ name: data.name });
-  if (brand) {
-    throw createHttpError(404, "Bill already taken");
+  const carts = data.carts;
+  if (carts.length < 1) {
+    throw Error("Carts empty !");
   }
-  return await BillModel.create(data);
+  const arrayTotal = await Promise.all(
+    carts.map(async (item) => {
+      const product = await productService.findProductById(item._id);
+      return product.price * item.quantity;
+    })
+  );
+  const total = arrayTotal.reduce((prev, crr) => {
+    return prev + crr;
+  }, 0);
+  const dataInsert = {
+    username: data.username,
+    email: data.email,
+    phone_number: data.phone_number,
+    address: data.address,
+    total,
+    sale_date: Date.now(),
+    sale_staff: data?.sale_staff,
+    status: STATUS_BILL["pending"],
+    note: data.note,
+  };
+  const bill = await BillModel.create(dataInsert);
+  await Promise.all(
+    carts.map(async (item) => {
+      await BillDetailModel.create({
+        product_id: item._id,
+        bill_id: bill._id,
+        quantity: item.quantity,
+        price: item.price,
+      });
+    })
+  );
+  return bill;
 };
 
 const updateBill = async (id, data) => {

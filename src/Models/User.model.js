@@ -7,8 +7,7 @@ const UserSchema = new Schema(
     email: {
       type: String,
       trim: true,
-      unique: true,
-      required: true,
+      required: false,
       lowercase: true,
       unique: true,
     },
@@ -31,7 +30,7 @@ const UserSchema = new Schema(
     date_of_birth: {
       type: Date,
       trim: true,
-      required: true,
+      required: false,
     },
     address: {
       type: String,
