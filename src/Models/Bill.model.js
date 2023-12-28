@@ -4,6 +4,11 @@ const Schema = mongoose.Schema;
 
 const BillSchema = new Schema(
   {
+    code: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     email: {
       type: String,
       trim: true,
@@ -47,10 +52,6 @@ const BillSchema = new Schema(
     note: {
       type: String,
       trim: true,
-    },
-    user_id: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
     },
     is_deleted: {
       type: Boolean,

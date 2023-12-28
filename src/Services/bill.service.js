@@ -1,15 +1,28 @@
 import createHttpError from "http-errors";
+import mongoose from "mongoose";
+
 import BillModel from "../Models/Bill.model";
 import BillDetailModel from "../Models/BillDetail.model";
 import { PASSWOD_DEFAULT, STATUS_BILL } from "../Constants";
 import userService from "./user.service";
 import productService from "./product.service";
+import { generateRandomCode } from "../Helpers";
+
 const findBillById = async (id) => {
-  return await BillModel.findById(id);
+  const bill = await BillModel.findById(id);
+  return {
+    ...bill.toObject(),
+    list: await BillDetailModel.find({ bill_id: id }).populate({
+      path: "product_id",
+      populate: { path: "thumbnail" },
+    }),
+  };
 };
 
 const getListBillByConditions = async (conditions) => {
-  return await BillModel.find(conditions);
+  return await BillModel.find(conditions)
+    .populate("sale_staff")
+    .sort({ updatedAt: -1 });
 };
 
 const findBillByConditions = async (conditions, options = {}) => {
@@ -31,6 +44,7 @@ const createBill = async (data) => {
     return prev + crr;
   }, 0);
   const dataInsert = {
+    code: generateRandomCode(10),
     username: data.username,
     email: data.email,
     phone_number: data.phone_number,

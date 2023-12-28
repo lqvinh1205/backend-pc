@@ -14,17 +14,13 @@ const BillDetailSchema = new Schema(
       required: true,
       default: ZERO,
     },
-    user_id: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
     bill_id: {
       type: Schema.Types.ObjectId,
       ref: "Bill",
     },
     product_id: {
       type: Schema.Types.ObjectId,
-      ref: "Product",
+      ref: "Products",
     },
   },
   { timestamps: true }
