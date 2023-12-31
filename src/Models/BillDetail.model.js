@@ -18,10 +18,12 @@ const BillDetailSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Bill",
     },
-    product_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Products",
-    },
+    receipt_detail_id: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "ReceiptDetail",
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -1,12 +1,26 @@
 import createHttpError from "http-errors";
 import ReceiptModel from "../Models/Receipt.model";
+import { generateRandomCode } from "../Helpers";
+import ReceiptDetailModel from "../Models/ReceiptDetail.model";
+import ProductModel from "../Models/Product.model";
 
 const findReceiptById = async (id) => {
-  return await ReceiptModel.findById(id);
+  const receipt = await ReceiptModel.findById(id).populate("importer");
+  return {
+    ...receipt.toObject(),
+    list: await ReceiptDetailModel.find({
+      receipt_id: id,
+    }).populate({
+      path: "product_id",
+      populate: { path: "thumbnail" },
+    }),
+  };
 };
 
 const getListReceiptByConditions = async (conditions) => {
-  return await ReceiptModel.find(conditions);
+  return await ReceiptModel.find(conditions)
+    .populate("importer")
+    .sort({ createdAt: -1 });
 };
 
 const findReceiptByConditions = async (conditions, options = {}) => {
@@ -14,11 +28,30 @@ const findReceiptByConditions = async (conditions, options = {}) => {
 };
 
 const createReceipt = async (data) => {
-  const brand = await findReceiptByConditions({ name: data.name });
-  if (brand) {
-    throw createHttpError(404, "Receipt already taken");
+  if (!data.products || data.products.length == 0) {
+    throw new Error("Sản phẩm không hợp lệ");
   }
-  return await ReceiptModel.create(data);
+  const receipt = await ReceiptModel.create({
+    code: generateRandomCode(10),
+    import_date: new Date(),
+    importer: data.importer,
+  });
+  await Promise.all(
+    data.products.map(async (product) => {
+      await ReceiptDetailModel.create({
+        product_id: product._id,
+        quantity: product.quantity,
+        receipt_id: receipt._id,
+        price: product.price,
+        quantity_in_stock: product.quantity,
+      });
+      await ProductModel.findByIdAndUpdate(product._id, {
+        $inc: { quantity_in_stock: product.quantity },
+      });
+    })
+  );
+
+  return receipt;
 };
 
 const updateReceipt = async (id, data) => {

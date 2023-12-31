@@ -7,14 +7,16 @@ import { PASSWOD_DEFAULT, STATUS_BILL } from "../Constants";
 import userService from "./user.service";
 import productService from "./product.service";
 import { generateRandomCode } from "../Helpers";
+import ProductModel from "../Models/Product.model";
+import ReceiptDetailModel from "../Models/ReceiptDetail.model";
 
 const findBillById = async (id) => {
   const bill = await BillModel.findById(id);
   return {
     ...bill.toObject(),
     list: await BillDetailModel.find({ bill_id: id }).populate({
-      path: "product_id",
-      populate: { path: "thumbnail" },
+      path: "receipt_detail_id",
+      populate: { path: "product_id", populate: "thumbnail" },
     }),
   };
 };
@@ -58,11 +60,42 @@ const createBill = async (data) => {
   const bill = await BillModel.create(dataInsert);
   await Promise.all(
     carts.map(async (item) => {
-      await BillDetailModel.create({
+      const receiptDetail = await ReceiptDetailModel.find({
         product_id: item._id,
+        quantity_in_stock: {
+          $gt: 0,
+        },
+      }).sort({ createdAt: -1 });
+      let quantity = item.quantity;
+      const receiptIds = await Promise.all(
+        receiptDetail.map(async (item) => {
+          if (quantity <= 0) {
+            return false; // Đã đủ quantity, không cần xử lý thêm
+          }
+
+          const quantityToReduce = Math.min(quantity, item.quantity_in_stock);
+
+          await ReceiptDetailModel.findByIdAndUpdate(item._id, {
+            $inc: { quantity_in_stock: -quantityToReduce },
+          });
+
+          quantity -= quantityToReduce;
+
+          return item._id.toString();
+        })
+      );
+      if (receiptIds.length === 0) {
+        throw new Error("Hết hàng");
+      }
+
+      await BillDetailModel.create({
+        receipt_detail_id: receiptIds,
         bill_id: bill._id,
         quantity: item.quantity,
         price: item.price,
+      });
+      await ProductModel.findByIdAndUpdate(item._id, {
+        $inc: { quantity_in_stock: -item.quantity },
       });
     })
   );

@@ -13,6 +13,8 @@ import ProductRouter from "./Routes/product.router";
 import ConfiguarationRouter from "./Routes/configuaration.router";
 import ImagesRouter from "./Routes/image.router";
 import BillRouter from "./Routes/bill.router";
+import ReceiptRouter from "./Routes/receipt.router";
+import ReportRouter from "./Routes/report.router";
 
 //Middleware
 import { checkAuthentication } from "./Middlewares/token";
@@ -45,6 +47,8 @@ app.use("/v1/products", ProductRouter);
 app.use("/v1/configuage", ConfiguarationRouter);
 app.use("/v1/images", ImagesRouter);
 app.use("/v1/bills", BillRouter);
+app.use("/v1/receipts", ReceiptRouter);
+app.use("/v1/report", ReportRouter);
 
 app.use((req, res, next) => {
   next(createHttpError(404, "Not found"));

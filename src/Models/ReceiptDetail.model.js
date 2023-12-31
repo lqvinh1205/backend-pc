@@ -9,13 +9,24 @@ const ReceiptDetailSchema = new Schema(
       trim: true,
       required: true,
     },
+    quantity_in_stock: {
+      type: Number,
+      trim: true,
+      required: true,
+      default: 0,
+    },
+    price: {
+      type: Number,
+      trim: true,
+      required: true,
+    },
     receipt_id: {
       type: Schema.Types.ObjectId,
-      ref: "Receipt",
+      ref: "Receipts",
     },
     product_id: {
       type: Schema.Types.ObjectId,
-      ref: "Product",
+      ref: "Products",
     },
   },
   { timestamps: true }

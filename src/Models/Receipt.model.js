@@ -17,7 +17,7 @@ const ReceiptSchema = new Schema(
     },
     importer: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
     },
   },
   { timestamps: true }
