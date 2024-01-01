@@ -4,7 +4,7 @@ const productService = require("../Services/product.service").default;
 const getListProduct = catchAsync(async (req, res) => {
   const conditions = req.query;
   const products = await productService.getListProductByConditions(conditions);
-  const total = await productService.getListProductByConditions();
+  const total = await productService.getListProductByConditions(conditions);
   return res.status(200).json({
     status: 200,
     message: "success",

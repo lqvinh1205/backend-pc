@@ -24,6 +24,14 @@ const getListProductByConditions = async (conditions) => {
   if (perpage && page) {
     query.skip((page - 1) * perpage);
   }
+  if (conditions?.brand) {
+    query.where("brand_id").equals(conditions.brand);
+  }
+  if (conditions?.search) {
+    const searchTerm = conditions.search;
+    const regex = new RegExp(searchTerm, "i");
+    query.where("name").regex(regex);
+  }
   return await query.exec();
 };
 
