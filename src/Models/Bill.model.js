@@ -37,7 +37,7 @@ const BillSchema = new Schema(
     },
     sale_staff: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
     },
     sale_date: {
       type: Date,

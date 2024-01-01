@@ -1,10 +1,6 @@
-import createHttpError from "http-errors";
-import mongoose from "mongoose";
-
 import BillModel from "../Models/Bill.model";
 import BillDetailModel from "../Models/BillDetail.model";
-import { PASSWOD_DEFAULT, STATUS_BILL } from "../Constants";
-import userService from "./user.service";
+import { STATUS_BILL } from "../Constants";
 import productService from "./product.service";
 import { generateRandomCode } from "../Helpers";
 import ProductModel from "../Models/Product.model";
@@ -22,9 +18,47 @@ const findBillById = async (id) => {
 };
 
 const getListBillByConditions = async (conditions) => {
-  return await BillModel.find(conditions)
-    .populate("sale_staff")
-    .sort({ updatedAt: -1 });
+  return await BillModel.aggregate([
+    {
+      $lookup: {
+        from: "billdetails",
+        localField: "_id",
+        foreignField: "bill_id",
+        as: "list",
+      },
+    },
+    {
+      $unwind: "$list",
+    },
+    {
+      $lookup: {
+        from: "receiptdetails",
+        localField: "list.receipt_detail_id",
+        foreignField: "_id",
+        as: "list.receipt",
+      },
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "list.receipt.product_id",
+        foreignField: "_id",
+        as: "list.receipt.product_id",
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        code: { $first: "$code" },
+        sale_date: { $first: "$sale_date" },
+        status: { $first: "$status" },
+        username: { $first: "$username" },
+        total: { $first: "$total" },
+        createdAt: { $first: "$createdAt" },
+        list: { $push: "$list" },
+      },
+    },
+  ]).sort({ createdAt: -1 });
 };
 
 const findBillByConditions = async (conditions, options = {}) => {
