@@ -17,7 +17,7 @@ const getListProductByConditions = async (conditions) => {
   const query = ProductModel.find()
     .populate("images")
     .populate("thumbnail")
-    .sort({ updatedAt: -1 });
+    .sort({ createdAt: -1 });
   if (perpage) {
     query.limit(perpage);
   }
