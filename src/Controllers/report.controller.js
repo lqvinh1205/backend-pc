@@ -11,6 +11,17 @@ const getListInventory = catchAsync(async (req, res) => {
   });
 });
 
+const getReportDashboard = catchAsync(async (req, res) => {
+  const conditions = req.query;
+  const brands = await reportService.getReportDashboardByConditions(conditions);
+  return res.status(200).json({
+    status: 200,
+    message: "success",
+    data: brands,
+  });
+});
+
 module.exports = {
   getListInventory,
+  getReportDashboard,
 };
