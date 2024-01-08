@@ -4,7 +4,7 @@ import morgan from "morgan";
 import { connect, connection } from "mongoose";
 import { createServer } from "http";
 import cors from "cors";
-
+import dotenv from "dotenv";
 //Import router
 import UserRouter from "./Routes/users.router";
 import AuthRouter from "./Routes/auth.router";
@@ -24,7 +24,7 @@ import path from "path";
 
 const app = express();
 const server = createServer(app);
-
+dotenv.config();
 app.use(
   cors({
     origin: "*",
@@ -40,7 +40,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // su dung cac route
 app.use("/images", express.static(path.resolve(__dirname, "Storage/uploads")));
-app.use("/v1", AuthRouter);
 app.use("/v1/users", UserRouter);
 app.use("/v1/brands", BrandRouter);
 app.use("/v1/products", ProductRouter);
@@ -49,6 +48,7 @@ app.use("/v1/images", ImagesRouter);
 app.use("/v1/bills", BillRouter);
 app.use("/v1/receipts", ReceiptRouter);
 app.use("/v1/report", ReportRouter);
+app.use("/v1/auth", AuthRouter);
 
 app.use((req, res, next) => {
   next(createHttpError(404, "Not found"));

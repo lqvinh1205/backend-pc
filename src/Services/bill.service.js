@@ -47,10 +47,19 @@ const getListBillByConditions = async (conditions) => {
       },
     },
     {
+      $lookup: {
+        from: "users",
+        localField: "sale_staff",
+        foreignField: "_id",
+        as: "sale_staff",
+      },
+    },
+    {
       $group: {
         _id: "$_id",
         code: { $first: "$code" },
         sale_date: { $first: "$sale_date" },
+        sale_staff: { $first: "$sale_staff" },
         status: { $first: "$status" },
         username: { $first: "$username" },
         total: { $first: "$total" },

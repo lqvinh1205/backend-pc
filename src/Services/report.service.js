@@ -1,4 +1,3 @@
-import BrandModel from "../Models/Brand.model";
 import ReceiptDetailModel from "../Models/ReceiptDetail.model";
 import BillModel from "../Models/Bill.model";
 import ProductModel from "../Models/Product.model";

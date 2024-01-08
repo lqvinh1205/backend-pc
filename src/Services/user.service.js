@@ -22,7 +22,7 @@ const createUser = async (data) => {
   if (user) {
     throw createHttpError(404, "User already taken");
   }
-  data.password = await hash(PASSWOD_DEFAULT, 8);
+  data.password = await hash(data?.password || PASSWOD_DEFAULT, 8);
   return await UserModel.create(data);
 };
 

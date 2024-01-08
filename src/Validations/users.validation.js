@@ -4,10 +4,11 @@ const userCreate = {
   body: Joi.object({
     email: Joi.string().email().required().trim().lowercase(),
     username: Joi.string().required().trim(),
+    password: Joi.string().trim(),
     phone_number: Joi.string().required().trim(),
     date_of_birth: Joi.date().required(),
     address: Joi.string().required().trim(),
-    role: Joi.number().required(),
+    role: Joi.number(),
   }),
 };
 const userUpdate = {

@@ -1,30 +1,37 @@
 import createHttpError, { Unauthorized } from "http-errors";
 import { compare } from "bcrypt";
-import {
-  findUserByConditions,
-  findUserById,
-  updateUser,
-} from "../Services/user.service";
+import userService from "../Services/user.service";
 import { sign, verify } from "jsonwebtoken";
 
 const loginWithEmailAndPassword = async (email, password) => {
-  const user = await findUserByConditions(
+  const user = await userService.findUserByConditions(
     { email },
-    { email: true, username: true, password: true }
+    {
+      email: true,
+      username: true,
+      password: true,
+      role: true,
+      phone_number: true,
+      address: true,
+    }
   );
   if (!user) {
     throw createHttpError(404, "User not found");
   }
   const valid = await compare(password, user.password);
+
   if (!valid) {
     throw createHttpError(401, "Email or password not corect");
   }
   const { token, refreshToken } = generateToken(user);
-  await updateUser(user._id, { refresh_token: refreshToken });
-
+  await userService.updateUser(user._id, { refresh_token: refreshToken });
   return {
     token,
     refreshToken,
+    user: {
+      ...user.toObject(),
+      password: "",
+    },
   };
 };
 
@@ -84,7 +91,9 @@ const verifyRefreshToken = async (token) => {
   if (!payload) {
     throw Unauthorized();
   }
-  const { refresh_token: refToken } = await findUserById(payload._id);
+  const { refresh_token: refToken } = await userService.findUserById(
+    payload._id
+  );
 
   if (token != refToken) {
     throw Unauthorized();
