@@ -62,7 +62,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-connect("mongodb://127.0.0.1:27017/backend-pc")
+connect("mongodb://127.0.0.1:27017/backend")
   .then(() => console.log("Database connect success"))
   .catch((err) => console.log("Database connect faild"));
 

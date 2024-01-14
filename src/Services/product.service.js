@@ -27,6 +27,9 @@ const getListProductByConditions = async (conditions) => {
   if (conditions?.brand) {
     query.where("brand_id").equals(conditions.brand);
   }
+  if (conditions?.is_delete) {
+    query.where("is_deleted", conditions.is_delete);
+  }
   if (conditions?.search) {
     const searchTerm = conditions.search;
     const regex = new RegExp(searchTerm, "i");

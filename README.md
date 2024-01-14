@@ -7,3 +7,5 @@
 # B1: npm install
 
 # B2: npm run start
+
+# B3: npm run seeder
