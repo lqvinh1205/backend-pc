@@ -35,6 +35,9 @@ const createReceipt = async (data) => {
     code: generateRandomCode(10),
     import_date: new Date(),
     importer: data.importer,
+    address: data.address,
+    warehouse: data.warehouse,
+    deliver: data.deliver,
   });
   await Promise.all(
     data.products.map(async (product) => {

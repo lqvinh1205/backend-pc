@@ -19,6 +19,21 @@ const ReceiptSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Users",
     },
+    address: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    warehouse: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    deliver: {
+      type: String,
+      trim: true,
+      required: true,
+    },
   },
   { timestamps: true }
 );
